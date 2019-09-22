@@ -1,4 +1,5 @@
-这一部分主要是mnist数据集和kears框架的使用。   
+（1）内容简介    
+这一部分主要是MNIST数据集和kears框架的使用。   
 utils.py涉及了mnist数据的获取和批处理。  
 model.py设计了使用keras框架自定义网络模型,使用的是LeNet5模型。  
 main.py中涉及了两种训练模型的方法，其中run1()是使用自定义的方法训练模型，run2()是使用keras框架封装的compile和fit函数训练模型。  
@@ -6,7 +7,21 @@ main.py中涉及了两种训练模型的方法，其中run1()是使用自定义�
 如果tf版本低于1.13，在定义模型时，最后一层的激活函数设置为softmax，训练模型时，compile中设置loss=keras.losses.categorical_crossentropy；  
 如果tf版本高于或者等于1.13，在定义模型时，最后一层的激活函数设置为None，训练模型时，compile中设置loss=keras.losses.CategoricalCrossentropy(from_logits=True)。  
 
-遇到的坑：
+(2) MNIST数据集简介    
+MNIST数据集由深度学习三驾马车之一的Yann LeCun创造，用于书写数字识别，下载网址：http://yann.lecun.com/exdb/mnist/  
+图片中包含一个0~9的数字，每个数字有7k张，这个数据集共有70k张图片，每张图片都有相对应的label。   
+其中，train_data: 60k，test_data: 10k或者train_data: 55k, validation_data: 5k, test_data: 10k。   
+下面是使用tensorflow处理下载到本地的MNSIT数据集的代码：
+```python
+from tensorflow.examples.tutorials.mnist import input_data
+MNIST_dir = 'xxx/'
+dataset = input_data.read_data_sets(MNIST_dir, one_hot=True)
+train_images, train_labels = dataset.train.images, dataset.train.labels
+validation_images, validation_labels = dataset.validation.images, dataset.validation.labels
+test_images, test_labels = dataset.test.images, dataset.test.labels 
+```
+
+（3）遇到的坑    
 定义模型时，最后一层没有添加activation，即模型的输出是logits。  
 使用keras框架封装的函数训练模型，因为tensorflow版本较低，keras.losses中没有CategoricalCrossentropy类，发现只有keras.losses.categorical_crossentropy，感觉二者非常接近，就索性将compile中的loss设置成了keras.losses.categorical_crossentropy，但是categorical_crossentropy的参数中只有y_true和y_predict，无法设置from_logits=True，没有想那么多，以为keras内部封装的函数会自动处理，就没有设置，直接训练。造成的结果是loss基本不变或者上下波动，accuracy也是上下波动并且非常低（接近10%）。  
 检查了半天也没发现错在哪，于是乎陷入了焦虑。。。  
