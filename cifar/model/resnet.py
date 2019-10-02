@@ -2,7 +2,7 @@ import tensorflow as tf
 # from tensorflow.python import keras
 from tensorflow.python.keras import Model, layers, Sequential
 
-# ResNet 2~3个卷积层 + 一个shot-cut比较合适，不能有维度的衰减
+# ResNet 2~3个卷积层 + 一个short-cut比较合适，不能有维度的衰减
 # 每个unit，输入和输出的维度相等，1x1, 3x3, 1x1卷积
 
 # cv research unit: Conv-BN-ReLU
@@ -11,13 +11,15 @@ class Basic_Block(layers.Layer):
 
     def __init__(self, filter_num, stride=1):
         super(Basic_Block, self).__init__()
-
+        # path 1
         self.conv1 = layers.Conv2D(filters=filter_num, kernel_size=(3, 3), strides=stride, padding='same')
         self.bn1 = layers.BatchNormalization()
         self.relu = layers.Activation('relu')
 
         self.conv2 = layers.Conv2D(filters=filter_num, kernel_size=(3, 3), strides=1, padding='same')
         self.bn2 = layers.BatchNormalization()
+        
+        # path2
         if stride != 1:
             self.downsample = Sequential()
             self.downsample.add(layers.Conv2D(filter_num, (1, 1), strides=stride))
@@ -25,24 +27,27 @@ class Basic_Block(layers.Layer):
             self.downsample = lambda  x: x
 
     def call(self, inputs, training=None):
-        out = self.conv1(inputs)
-        out = self.bn1(out)
-        out = self.relu(out)
+        # convolution path    
+        x = self.conv1(inputs)
+        x = self.bn1(x)
+        x = self.relu(x)
 
-        out = self.conv2(out)
-        out = self.bn2(out)
-
+        x = self.conv2(x)
+        x = self.bn2(x)
+        
+        # short-cut path
         identity = self.downsample(inputs)
-
-        output = layers.add([out, identity])
+        
+        # merge two path
+        output = layers.add([x, identity])
+        
         output = tf.nn.relu(output)
-
         return output
 
 
 class ResNet(Model):
 
-    def __init__(self, layer_dims, num_classes): # [2, 2, 2, 2]
+    def __init__(self, layer_dims, num_classes):
         super(ResNet, self).__init__()
         self.stem = Sequential([
             layers.Conv2D(64, (3, 3), strides=(1, 1)),
@@ -103,6 +108,8 @@ def test():
     print(out.shape)
 
     model.summary()
+    
+    
 if __name__ == '__main__':
     test()
 
