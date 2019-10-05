@@ -15,8 +15,9 @@ main.py是加载数据集，并对模型进行训练和测试。
 ```python
  self.state = [tf.zeros([batch_size, hidden_units]),tf.zeros([batch_size, hidden_units])]
 ```
->我使用的tensorflow版本是1.8，发现这么设置不行，查阅官方文档，发现state就是list，不知道究竟怎么回事。   
+>我使用的tensorflow版本是1.8，发现这么设置不行，查阅官方文档，发现state就是list，不知道究竟怎么回事。  
 最后无奈之下，只好自己动手实现mylstmcell类。  
+此外，在keras封装的simplernncell、grucell中也存在这个问题！
 **坑二：**  
 还是与state相关的问题。。      
 对于自定义的mylstmcell，调用其instance中的call方法，输入是inputs，在__main__中测试时，发现使用      
