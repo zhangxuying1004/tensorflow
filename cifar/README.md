@@ -1,4 +1,4 @@
-(1) cifar数据集简介   
+**(1) cifar数据集简介**   
 >cifar数据集的下载地址: https://www.cs.toronto.edu/~kriz/cifar.html  
 **cifar10数据集**  
 cifar-10数据集由10个类的60k个32x32彩色图像组成，每个类有6k个图像，这些类完全相互排斥，没有重叠。  
@@ -19,4 +19,14 @@ def unpickle(file):
 **labels**是10000个由0~9数字组成的列表，索引i处的数字表示阵列数据中第i个图像的标签。  
 此外，cifar10/100数据集中还有一个**batches.meta**文件，它也包含一个字典文件，用label_names[i]来指明类别i的名称。  
 
+**（2）代码说明**   
+>model文件夹中，是使用keras框架自定义的AlexNet、VGGNet、ResNet和InceptionNet。   
+utils.py中，Config类用于模型中超参数的设置，其他的method用于预处理。   
+train.py中，加载数据集，使用一般的方法对模型进行训练，并使用Tensorboard监测几个重要的scalar的变化，最后保存训练得到模型。   
+eval.py中，加载数据集，加载保存的模型，对模型进行测试。   
+main.py中，加载数据集，使用keras框架封装的函数对模型进行训练和测试。  
+注：代码中使用的是keras框架中封装的方法来加载数据集，代码如下：   
+```python 
+(x_train, y_train), (x_test, y_test) = datasets.cifar10.load_data()
+```
 
