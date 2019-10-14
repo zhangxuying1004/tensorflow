@@ -69,4 +69,24 @@ base_mode = applications.resnet50.ResNet50(weights='imagenet', include_top=False
 model = Model(inputs=base_model.input, outputs=base_model.get_layer(index=90).output)
 out = model(x)
 ```
+## 3、mnist数据集操作   
+70k = 55k + 5K+ 10K, 28x28  
+```python
+# 读取mnist数据集，MNIST_dir为数据集保存的位置  
+from tensorflow.examples.tutorials.minist import input_data
+mnist = input_data.read_data_sets(MNIST_dir,one_hot=True)
 
+# 获取全部训练数据
+mnist.train.images, mnist.train.labels
+# 获取全部验证数据
+mnist.validation.images, mnist.validation.labels 
+# 获取全部测试数据
+mnist.test.images, mnist.test.labels
+
+# 每次返回一个batch的训练数据（images+labels）
+mnist.train.next(batch_size)
+# 每次返回一个batch的验证数据（images+labels）
+mnist.validation.next(batch_size)
+每次返回一个batch的测试数据（images+labels）
+mnist.test.next(batch_size)
+```
