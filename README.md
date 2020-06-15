@@ -25,19 +25,21 @@ out = model(x)
 ```
 2.2 使用keras框架定义网络层
 ```
-# 全连接层    
+# 全连接层，主要参数是输出单元的个数，[b, input_dim] => [b, units]
 Layer = layers.Dense(units=, activation=None)
-# 卷积层  
-Layer = layers.Conv2D(filters=2, kernel_size=, strides=, padding=, )
-# 循环神经网络
+# 一维卷积层，主要用于处理序列数据，[b, time_steps, input_dim] => [b, new_time_steps, filters]
+Layer = layers.ConvD(filters=, kernel_size=, strides=, padding=, )
+# 二维卷积层，主要用于处理图片数据，[b, w, h, c] => [b, new_w, new_h, filters]
+Layer = layers.Conv2D(filters=, kernel_size=, strides=, padding=, )
+# 循环神经网络，主要参数是隐含单元的个数，[b, time_steps, input_dim] => [b, units]
 Layer = layers.LSTM(units=)
 
 # 拼接layers定义的网络层
-model = Sequential(
+model = Sequential([
      Layer1,
      Layer2,
      ...
-)
+])
 # 调用
 out = model(x)
 ```
@@ -53,6 +55,7 @@ model.fit(
     batch_size, epochs
 )
 model.evalute(eval_x, eval_y, batch_size)
+model.predict(test_x, batch_size)
 ```
 2.4 输出每一层网络
 ```
