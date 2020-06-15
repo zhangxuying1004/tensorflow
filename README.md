@@ -28,7 +28,7 @@ out = model(x)
 # 全连接层，主要参数是输出单元的个数，[b, input_dim] => [b, units]
 Layer = layers.Dense(units=, activation=None)
 # 一维卷积层，主要用于处理序列数据，[b, time_steps, input_dim] => [b, new_time_steps, filters]
-Layer = layers.ConvD(filters=, kernel_size=, strides=, padding=, )
+Layer = layers.Conv1D(filters=, kernel_size=, strides=, padding=, )
 # 二维卷积层，主要用于处理图片数据，[b, w, h, c] => [b, new_w, new_h, filters]
 Layer = layers.Conv2D(filters=, kernel_size=, strides=, padding=, )
 # 循环神经网络，主要参数是隐含单元的个数，[b, time_steps, input_dim] => [b, units]
